@@ -128,6 +128,20 @@ public class PlayerController : MonoBehaviour, IDamageable
         else
             ThrustRelease();
 
+
+        if (Input.GetKey(KeyCode.S))
+        {
+            if (Input.GetKey(KeyCode.Space))
+                rigidBody.AddForce(-this.gameObject.transform.forward * MainThruster * 2, ForceMode.VelocityChange);
+            else
+            {
+                rigidBody.AddForce(-this.gameObject.transform.forward * MainThruster, ForceMode.VelocityChange);
+            }
+        }
+
+
+
+
         Plane hP = new Plane(Vector3.up, 0f);
         Ray vRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
