@@ -2,34 +2,20 @@
 using System.Collections;
 
 public class WeaponAntiMatter : IWeapon
-{
-    
-
-    GameObject cannon;
-    GameObject bullet;
-    
-    Rigidbody bulletRigidBody;
-
-    static Object resourceBullet;
-
-    private float m_fCoolDownTime;
-    private float m_fCoolDown;
-    private float m_fSpeedCoeff;
-    private bool  m_bFire;
-    private bool  m_bConeFire;
-    private float m_bConeFireAngle;
+{        
+    private GameObject  m_hCannon;        
+    private float       m_fCoolDownTime;
+    private float       m_fCoolDown;
+    private float       m_fSpeedCoeff;
+    private bool        m_bFire;
+    private bool        m_bConeFire;
+    private float       m_bConeFireAngle;
 
     public bool IsPressed { get; private set; }
 
-    static WeaponAntiMatter()
-    {
-        resourceBullet = Resources.Load("Bullet");
-        
-    }
-
     public WeaponAntiMatter(GameObject hcannon, float fCoolDown, bool bConefire, float fSpeedModif, float fConefireAngle)
     {
-        cannon = hcannon;
+        m_hCannon = hcannon;
         
         m_fCoolDownTime = fCoolDown;
         m_fCoolDown = m_fCoolDownTime;
@@ -44,31 +30,28 @@ public class WeaponAntiMatter : IWeapon
         {
             m_fCoolDown = m_fCoolDownTime;
 
-            bullet = GameObject.Instantiate(resourceBullet) as GameObject;
-            BulletController hCtrl = bullet.GetComponent<BulletController>();
-            hCtrl.Speed *= m_fSpeedCoeff;
-            bullet.transform.position = cannon.transform.position;
-            Vector3 vPosition =  bullet.transform.position;
-            vPosition.y = 0;
-            bullet.transform.position = vPosition;
+            Bullet hBullet = Bullet.Pool.Get();//(GameObject.Instantiate(Resources.Load("Bullet")) as GameObject).GetComponent<Bullet>();
+            
+            hBullet.transform.position  = m_hCannon.transform.position;
+            Vector3 vPosition           = hBullet.transform.position;
+            vPosition.y                 = 0;
+            hBullet.transform.position  = vPosition;
 
             if (m_bConeFire)
             {
                 float fRange = UnityEngine.Random.Range(-m_bConeFireAngle, m_bConeFireAngle);
 
-                Vector3 vBulletForward = Quaternion.Euler(0f, fRange, 0f) * cannon.transform.forward;
+                Vector3 vBulletForward = Quaternion.Euler(0f, fRange, 0f) * m_hCannon.transform.forward;
                 vBulletForward.y = 0f;
                 vBulletForward.Normalize();
-                bullet.transform.forward = vBulletForward;
-                
+                hBullet.transform.forward = vBulletForward;                
             }
             else
             {
-                bullet.transform.forward = cannon.transform.forward;
+                hBullet.transform.forward = m_hCannon.transform.forward;
             }
 
-            
-            
+            hBullet.RigidBody.AddForce(hBullet.gameObject.transform.forward * (hBullet.Speed * m_fSpeedCoeff), ForceMode.VelocityChange);
         }
 
         if (m_fCoolDown > 0f)

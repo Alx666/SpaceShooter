@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
 
     const float OFFSET = 200.0f;
 
-    public DifficultyLevel currentDifficulty { get; set; }
+    public DifficultyLevel CurrentDifficulty { get; set; }
     public int currentWaveIndex = 0;
 
     private List<AIController> m_hEnemies;
@@ -99,14 +99,19 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         this.transform.position = Vector3.zero;
-        this.currentDifficulty = Difficulty[0];
+        this.CurrentDifficulty = Difficulty[0];
         //this.currentWave = Waves[0];
         //Calcolo centrale destro
     }
 
     void Update()
     {
-        if (currentDifficulty == null)
+        ScoreLabel.text = Bullet.Pool.Count.ToString();
+
+
+        return;
+
+        if (CurrentDifficulty == null)
             return;
         if (PlayerController.Instance == null)
             GameOver.text = "Game Over";
@@ -221,16 +226,16 @@ public class GameManager : MonoBehaviour
 
 
 
-    #region La Monnezzata dei punti
+    #region Score Update
 
     public Text ScoreLabel;
     public int TotalScore { get; set; }
     internal void AddScore(int p)
     {
-        TotalScore += p;
+        //TotalScore += p;
 
-        if (ScoreLabel != null)
-            ScoreLabel.text = "Player-1: " + TotalScore.ToString();
+        //if (ScoreLabel != null)
+        //    ScoreLabel.text = "Player-1: " + TotalScore.ToString();
     }
 
     #endregion
