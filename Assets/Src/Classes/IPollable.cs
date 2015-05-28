@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Src.Classes
+public interface IPoolable
 {
-    class IPollable
-    {
-    }
+    int PoolId { get; }
+
+    Pool<IPoolable> Pool { get; set; }
+
+    void Enable();
+
+    void Disable();
 }

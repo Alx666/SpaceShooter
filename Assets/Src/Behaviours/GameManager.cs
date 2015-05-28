@@ -106,39 +106,38 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        ScoreLabel.text = Bullet.Pool.Count.ToString();
-
-
         return;
+        //ScoreLabel.text = Bullet.Pool.Count.ToString();
+        
+        //if (CurrentDifficulty == null)
+        //    return;
 
-        if (CurrentDifficulty == null)
-            return;
-        if (PlayerController.Instance == null)
-            GameOver.text = "Game Over";
+        //if (PlayerController.Instance == null)
+        //    GameOver.text = "Game Over";
 
-        bool allClear = true;
+        //bool allClear = true;
 
-        for (int i = 0; i < m_hEnemies.Count; i++)
-        {
-            if (m_hEnemies[i] != null)
-            {
-                allClear = false;
-                break;
-            }
-        }
+        //for (int i = 0; i < m_hEnemies.Count; i++)
+        //{
+        //    if (m_hEnemies[i] != null)
+        //    {
+        //        allClear = false;
+        //        break;
+        //    }
+        //}
        
-        if (allClear)
-        {
-            m_hEnemies.Clear();
+        //if (allClear)
+        //{
+        //    m_hEnemies.Clear();
 
-            Waves[currentWaveIndex].Spawn(spawnPoints);
+        //    Waves[currentWaveIndex].Spawn(spawnPoints);
 
-            if (WaveCompleted != null)
-                WaveCompleted();
+        //    if (WaveCompleted != null)
+        //        WaveCompleted();
 
-            currentWaveIndex++;
-            WaveCount.text = "Wave: " + currentWaveIndex.ToString();
-        }
+        //    currentWaveIndex++;
+        //    WaveCount.text = "Wave: " + currentWaveIndex.ToString();
+        //}
 
     }
 
@@ -204,21 +203,21 @@ public class GameManager : MonoBehaviour
 
         public void Spawn(List<Vector3> spawnPoints)
         {
-            List<Vector3> sPoints = new List<Vector3>(spawnPoints);
+            //List<Vector3> sPoints = new List<Vector3>(spawnPoints);
 
-            foreach (var s in ShipSpawns)
-            {
-                for (int i = 0; i < s.GetAmount(); i++)
-                {
-                    GameObject obj = UnityEngine.Object.Instantiate(s.ShipResource) as GameObject;
-                    int spawnPointIndex = UnityEngine.Random.Range(0, sPoints.Count);
-                    obj.transform.position = sPoints[spawnPointIndex];
-                    sPoints.RemoveAt(spawnPointIndex);
+            //foreach (var s in ShipSpawns)
+            //{
+            //    for (int i = 0; i < s.GetAmount(); i++)
+            //    {
+            //        GameObject obj = UnityEngine.Object.Instantiate(s.ShipResource) as GameObject;
+            //        int spawnPointIndex = UnityEngine.Random.Range(0, sPoints.Count);
+            //        obj.transform.position = sPoints[spawnPointIndex];
+            //        sPoints.RemoveAt(spawnPointIndex);
 
-                    obj.transform.LookAt(PlayerController.Instance.transform);
+            //        obj.transform.LookAt(PlayerController.Instance.transform);
 
-                }
-            }
+            //    }
+            //}
         }
     }
 

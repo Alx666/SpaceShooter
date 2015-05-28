@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Pool<T> where T : Object, IPoolable
+public class Pool<T> where T : class, IPoolable
 {
     private Queue<T>    m_hInstances;
     private Object      m_hPrefabResource;
+
 
     public Pool(Object hPrefabResource)
     {
@@ -26,6 +27,7 @@ public class Pool<T> where T : Object, IPoolable
             hItem = (GameObject.Instantiate(m_hPrefabResource) as GameObject).GetComponent<T>();            
         }
 
+        hItem.Pool = this as Pool<IPoolable>;
         hItem.Enable();
         return hItem;
     }
@@ -42,10 +44,4 @@ public class Pool<T> where T : Object, IPoolable
     }
 
 
-}
-public interface IPoolable
-{
-    void Enable();
-
-    void Disable();
 }

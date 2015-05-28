@@ -49,8 +49,8 @@ public class Shield : MonoBehaviour
                 if (!AudioSFX.isPlaying)
                     AudioSFX.Play();
 
-                if (PlayerController.Instance != null)
-                    PlayerController.Instance.ShieldEnabled = true;
+                //if (PlayerController.Instance != null)
+                //    PlayerController.Instance.ShieldEnabled = true;
             }
 
             CurrentActivationTime -= Time.deltaTime;
@@ -70,8 +70,7 @@ public class Shield : MonoBehaviour
             ShieldEnergyFX.SetTrigger("ShieldDisabled");
             AudioSFX.Stop();
 
-            if (PlayerController.Instance != null)
-                PlayerController.Instance.ShieldEnabled = false;
+
 
             if (CurrentActivationTime < ActivationTime)
             {

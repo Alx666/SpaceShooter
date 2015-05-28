@@ -1,26 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WeaponLaser : IWeapon
+
+[RequireComponent(typeof(LineRenderer))]
+public class WeaponLaser : MonoBehaviour, IWeapon
 {
     static Object resourceHitParticle;
     static Object resourceAudioSourceLaserfx;
 
-    private GameObject m_hCannon;
-    private GameObject m_hHitParticle;
-    private GameObject m_hStartParticle;
-    private GameObject m_hAudioLaser;
+    public float DPS                = 50f;
+    public float MaxFireTemperature = 300f;
+    public float CelsiusPerSecond   = 1f;
+
+
+    public Color StartColorWeak     = Color.red;
+    public Color StartColorStrong   = Color.cyan;
+    public Color EndColorWeak       = Color.yellow;
+    public Color EndColorStrong     = Color.blue;    
+    public GameObject ShootLocator;
+    public GameObject HitParticle;
+    public GameObject ShootParticle;
+    public GameObject AudioLaser;
+
     private AudioSource m_hLaserSFX;
     private ParticleSystem m_hHitParicleSystem;
     private ParticleSystem m_hStartParticleSystem;
     private LineRenderer m_hRenderer;
     private Light startLight;
-    private Color startColorWeak = Color.red;
-    private Color startColorStrong = Color.cyan;
-    private Color endColorWeak = Color.yellow;
-    private Color endColorStrong = Color.blue;
-    private Color startColor;
-    private Color endColor;
+
+
+    
 
     private float m_fDamage;
     private float perc;
@@ -29,26 +38,17 @@ public class WeaponLaser : IWeapon
 
     
 
-    public WeaponLaser(GameObject hCannon, GameObject sParticle, Light sLight, LineRenderer hRenderer, float fDmgSec)
+    public WeaponLaser(GameObject sParticle, Light sLight, LineRenderer hRenderer, float fDmgSec)
     {
-        m_hCannon = hCannon;
-        m_hStartParticle = sParticle;
+        
+        ShootParticle = sParticle;
         m_hRenderer = hRenderer;
         m_fDamage = fDmgSec;
         startLight = sLight;
         resourceHitParticle = Resources.Load("Laser_ParticleHit");
         resourceAudioSourceLaserfx = Resources.Load("LaserSFX");
-        m_hStartParticleSystem = m_hStartParticle.GetComponent<ParticleSystem>();
-        targetLerpTime = 2f;
-
-        
-        //m_hStartParticle = GameObject.Instantiate(resourceStartParticle) as GameObject;
-        //m_hStartParticle.transform.position = m_hCannon.transform.position;
-        //m_hStartParticleSystem = m_hStartParticle.GetComponent<ParticleSystem>();
-
-        
-        //istanziare startParticle!!!
-
+        m_hStartParticleSystem = ShootParticle.GetComponent<ParticleSystem>();
+        targetLerpTime = 2f;        
     }
 
     public bool IsPressed { get; private set; }
@@ -59,9 +59,9 @@ public class WeaponLaser : IWeapon
             return;
 
         RaycastHit vHit;
-        if (Physics.Raycast(new Ray(m_hCannon.transform.position, m_hCannon.transform.forward), out vHit))
+        if (Physics.Raycast(new Ray(ShootLocator.transform.position, ShootLocator.transform.forward), out vHit))
         {
-            m_hRenderer.SetPosition(0, m_hCannon.transform.position);
+            m_hRenderer.SetPosition(0, ShootLocator.transform.position);
             m_hRenderer.SetPosition(1, vHit.point);
             //m_hStartParticle.transform.position = m_hCannon.transform.position;
 
@@ -77,13 +77,13 @@ public class WeaponLaser : IWeapon
                 //lerp smoothing
                 perc = perc * perc * perc * (perc * (6f * perc - 15f) + 10f);
                 //color lerp
-                m_hRenderer.SetColors(Color.Lerp(startColorWeak, startColorStrong, perc), Color.Lerp(endColorWeak, endColorStrong, perc));
+                m_hRenderer.SetColors(Color.Lerp(StartColorWeak, StartColorStrong, perc), Color.Lerp(EndColorWeak, EndColorStrong, perc));
 
 
                 hDamageable.Damage(m_fDamage * Time.deltaTime);
-                m_hHitParticle = GameObject.Instantiate(resourceHitParticle) as GameObject;
-                m_hHitParicleSystem = m_hHitParticle.GetComponent<ParticleSystem>();
-                m_hHitParticle.transform.position = vHit.point;
+                HitParticle = GameObject.Instantiate(resourceHitParticle) as GameObject;
+                m_hHitParicleSystem = HitParticle.GetComponent<ParticleSystem>();
+                HitParticle.transform.position = vHit.point;
                 //Vector3 dir = m_hCannon.transform.position - vHit.point;
                 //dir.Normalize();
                 //m_hHitParticle.transform.LookAt(m_hCannon.transform);
@@ -91,15 +91,12 @@ public class WeaponLaser : IWeapon
                 
             }
 
-
-
-
             //Istanziare l'effetto
         }
         else
         {
-            m_hRenderer.SetPosition(0, m_hCannon.transform.position);
-            m_hRenderer.SetPosition(1, m_hCannon.transform.position + m_hCannon.transform.forward * 500f);
+            m_hRenderer.SetPosition(0, ShootLocator.transform.position);
+            m_hRenderer.SetPosition(1, ShootLocator.transform.position + ShootLocator.transform.forward * 500f);
             currentLerpTime = 0f;
             m_hRenderer.SetColors(Color.red, Color.yellow);
             
@@ -110,12 +107,12 @@ public class WeaponLaser : IWeapon
     {
         m_hRenderer.enabled = false;
         startLight.enabled = false;
-        if (m_hHitParticle)
+        if (HitParticle)
             m_hHitParicleSystem.Stop(true);
-        GameObject.Destroy(m_hHitParticle);
+        GameObject.Destroy(HitParticle);
         if (m_hStartParticleSystem.isPlaying)
             m_hStartParticleSystem.enableEmission = false;
-        GameObject.DestroyImmediate(m_hAudioLaser);
+        GameObject.DestroyImmediate(AudioLaser);
 
         IsPressed = false;
     }
@@ -126,8 +123,8 @@ public class WeaponLaser : IWeapon
         startLight.enabled = true;
         m_hStartParticleSystem.enableEmission = true;
         m_hStartParticleSystem.Play(true);
-        m_hAudioLaser = GameObject.Instantiate(resourceAudioSourceLaserfx) as GameObject;
-        m_hLaserSFX = m_hAudioLaser.GetComponent<AudioSource>();
+        AudioLaser = GameObject.Instantiate(resourceAudioSourceLaserfx) as GameObject;
+        m_hLaserSFX = AudioLaser.GetComponent<AudioSource>();
         
         
 

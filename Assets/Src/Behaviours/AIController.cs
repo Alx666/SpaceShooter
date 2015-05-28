@@ -5,50 +5,42 @@ using System.Linq;
 
 public class AIController : MonoBehaviour, IDamageable
 {
-
-    public float MainthrusterPower;
-    public float SidethrusterPower;
-    public float Health = 100;
-    public float FollowTime;
-    public float TargetAndFireTime;
-    public float EvadeTime;
-    public float FullThrottleTime;
-    public MeshFilter DamagedDiffuse;
-    public MeshFilter DamagedColor;
-
-    public int ScoreIncrement = 100;
-
+    public float        MainthrusterPower;
+    public float        SidethrusterPower;
+    public float        Health              = 100;
+    public float        FollowTime;
+    public float        TargetAndFireTime;
+    public float        EvadeTime;
+    public float        FullThrottleTime;
+    public MeshFilter   DamagedDiffuse;
+    public MeshFilter   DamagedColor;
+    public int          ScoreIncrement      = 100;
+    public string       DEBUG_STATE;
 
 
     public float currentHealth { get; private set; }
 
     public Rigidbody Rigidbody { get; private set; }
 
-    WorldController worldController;
-    Renderer renderer;
+    private static  Object  m_hResourceExplosion;
 
-    static Object resourceExplosion;
-    private GameObject explosion;
-    private Animator animatorController;
-
-
-    private IEnemyState m_hCurrentState;
-    private IEnemyState m_hFollowState;
-    public string DEBUG_STATE;
-   
-
-    private List<Cannon> m_hCannons;
+    private GameObject      m_hExplosion;
+    private Animator        m_hAnimatorController;
+    private IEnemyState     m_hCurrentState;
+    private IEnemyState     m_hFollowState;
+    private WorldController m_hWorldController;
+    private Renderer        m_hRenderer;       
 
 
     void Awake()
     {
-        Rigidbody = this.GetComponent<Rigidbody>();
-        worldController = this.gameObject.GetComponent<WorldController>();
-        worldController.enabled = false;
-        renderer = this.GetComponent<Renderer>();
-        animatorController = this.GetComponent<Animator>();
-        
+        Rigidbody                   = this.GetComponent<Rigidbody>();
 
+        m_hWorldController          = this.gameObject.GetComponent<WorldController>();
+        m_hWorldController.enabled  = false;
+        m_hRenderer                 = this.GetComponent<Renderer>();
+        m_hAnimatorController       = this.GetComponent<Animator>();
+        
         //Create States
         StateTimed hFollow = new StateFollow(FollowTime);
         StateTimed hFire = new StateTargetAndFire(TargetAndFireTime);
@@ -68,9 +60,8 @@ public class AIController : MonoBehaviour, IDamageable
         m_hCurrentState = hFollow;
         m_hFollowState = hFollow;
 
-        resourceExplosion = Resources.Load("Explosion_FX");
-
-        m_hCannons = this.GetComponentsInChildren<Cannon>().ToList();
+        m_hResourceExplosion = Resources.Load("Explosion_FX");
+        
         currentHealth = Health;
     }
 
@@ -112,12 +103,12 @@ public class AIController : MonoBehaviour, IDamageable
         vRot.eulerAngles = new Vector3(0f, vAngles.y, 0f);
         this.transform.rotation = vRot;
 
-        if (!worldController.enabled)
+        if (!m_hWorldController.enabled)
         {
             Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
             if ((screenPos.x > 0f && screenPos.y > 0f) && (screenPos.x < Camera.main.pixelWidth && screenPos.y < Camera.main.pixelHeight))
             {
-                worldController.enabled = true;
+                m_hWorldController.enabled = true;
             }
         }
     }
@@ -140,10 +131,10 @@ public class AIController : MonoBehaviour, IDamageable
     public void Death()
     {
         m_hCurrentState = null;
-        explosion = GameObject.Instantiate(resourceExplosion) as GameObject;
-        explosion.transform.position = this.transform.position;
-        if (animatorController)
-            animatorController.SetTrigger("Die");
+        m_hExplosion = GameObject.Instantiate(m_hResourceExplosion) as GameObject;
+        m_hExplosion.transform.position = this.transform.position;
+        if (m_hAnimatorController)
+            m_hAnimatorController.SetTrigger("Die");
 
         //GameObject.Destroy(this.gameObject);
         Rigidbody hBody = this.GetComponent<Rigidbody>();
@@ -157,9 +148,9 @@ public class AIController : MonoBehaviour, IDamageable
 
         this.gameObject.GetComponent<Collider>().enabled = false;
         this.gameObject.GetComponent<WorldController>().enabled = false;
-        m_hCannons.ForEach(x => x.StopFire());
-        m_hCannons.Clear();
-        GameObject.Destroy(explosion);
+        //m_hCannons.ForEach(x => x.StopFire());
+        //m_hCannons.Clear();
+        GameObject.Destroy(m_hExplosion);
 
         //istanziare particella esplosione
         //disattivare playerController
@@ -278,19 +269,19 @@ public class AIController : MonoBehaviour, IDamageable
 
             if (Vector3.Angle(hShip.transform.forward, vDiff) <= 15f)
             {
-                for (int i = 0; i < hShip.m_hCannons.Count; i++)
-                {
-                    Cannon hCurrent = hShip.m_hCannons[i];
-                    hCurrent.Fire();
-                }
+                //for (int i = 0; i < hShip.m_hCannons.Count; i++)
+                //{
+                //    Cannon hCurrent = hShip.m_hCannons[i];
+                //    hCurrent.Fire();
+                //}
             }
             else
             {
-                for (int i = 0; i < hShip.m_hCannons.Count; i++)
-                {
-                    Cannon hCurrent = hShip.m_hCannons[i];
-                    hCurrent.StopFire();
-                }
+                //for (int i = 0; i < hShip.m_hCannons.Count; i++)
+                //{
+                //    Cannon hCurrent = hShip.m_hCannons[i];
+                //    hCurrent.StopFire();
+                //}
             }
         }
     }

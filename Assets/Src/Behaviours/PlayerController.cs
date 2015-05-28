@@ -7,42 +7,45 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour, IDamageable
 {
     public static PlayerController Instance { get; private set; }
-    public float CurrentHealth { get; private set; }
 
-    private static Object resourceBullet;
+    public float    CurrentHealth   { get; private set; }
+    public bool     ShieldEnabled   { get; private set; }
+
+    
     private static Object resourceExplosion;
 
-    public GameObject AfterBurner;
-    public Slider HealthSlider;
-    public ParticleSystem LightDamageFX;
-    public ParticleSystem HeavyDamageFX;
-    public GameObject LaserStartFX;
-    public Light LaserLight;
-    
+    public GameObject       AfterBurner;
+    public Slider           HealthSlider;
+    public ParticleSystem   LightDamageFX;
+    public ParticleSystem   HeavyDamageFX;
+    public GameObject       LaserStartFX;
+    public Light            LaserLight;
 
-    
 
-    
-    
-    
-    public float MainThruster = 5.0f;
-    public float SideThruster = 5.0f;
-    public float Health = 100f;
-        
-    private IWeapon currentWeapon;
+    public Shield              Shield              { get; set; }
+
+    public WeaponProjectile    WeaponAntiMatter    { get; set; }
+
+    public WeaponLaser         WeaponLaser         { get; set; }
+
+    private IWeapon             m_hCurrentWeapon;
+    private Rigidbody           m_hRigidBody;
+
+
+    #region Refactoring 
+
     private float ab_lerpSpeed = 1.0f;
     private float m_fLerpTime = 1f;
     private float m_fCurrentLerpTime = 0f;
     private Vector3 afterBurnerScale;
-    private Vector3 afterBurnerCurrentScale;
-    private Rigidbody rigidBody;
+    private Vector3 afterBurnerCurrentScale;    
     private LineRenderer m_hLineRenderer;
-    private GameObject explosion;
+    private GameObject explosion;        
+    public float MainThruster = 5.0f;
+    public float SideThruster = 5.0f;
+    public float Health = 100f;
 
-    private const float CONEFIRE_ANGLE = 5f;
-    private const float LASER_DAMAGE = 50f;
-
-    public bool ShieldEnabled { get; set; }
+    #endregion
 
 
     void Awake()
@@ -50,11 +53,17 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (Instance != null)
             throw new System.Exception("Multiple PlayerController Detected!!!");
 
-        Instance = this;
-        rigidBody = this.GetComponent<Rigidbody>();
+        Instance         = this;
+        m_hRigidBody     = this.GetComponent<Rigidbody>();
+        
+        WeaponAntiMatter = this.GetComponentInChildren<WeaponProjectile>();
+        WeaponLaser      = this.GetComponentInChildren<WeaponLaser>();
+        Shield           = this.GetComponentInChildren<Shield>();
 
-        if(resourceBullet == null)
-            resourceBullet = Resources.Load("Bullet");
+        m_hCurrentWeapon = WeaponAntiMatter;
+
+
+
 
         if (resourceExplosion == null)
             resourceExplosion = Resources.Load("Explosion_FX");
@@ -70,11 +79,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         EnableControl = false;
         this.transform.rotation = Quaternion.identity;
+
+        
     }
 
 	void Start () 
-    {
-        currentWeapon = new WeaponAntiMatter(this.transform.Find("Cannon").gameObject, 0.05f, true, 3.0f, CONEFIRE_ANGLE);
+    {        
 	}
 	
 
@@ -85,24 +95,35 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         AfterBurner.transform.localScale = afterBurnerCurrentScale;
 
-        if (ShieldEnabled && currentWeapon.IsPressed)
+        if (Input.GetMouseButtonDown(0))
         {
-            currentWeapon.OnbuttonReleased();
-        }
-        else if (!ShieldEnabled)
-        {
-            if (Input.GetMouseButtonUp(0))
-            {
-                currentWeapon.OnbuttonReleased();
-            }
+            m_hCurrentWeapon.OnbuttonPressed();
+        }  
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                currentWeapon.OnbuttonPressed();
-            }
+        if (Input.GetMouseButtonUp(0))
+        {
+            m_hCurrentWeapon.OnbuttonReleased();
         }
 
-        currentWeapon.OnUpdate();
+
+
+
+        //if (ShieldEnabled && m_hCurrentWeapon.IsPressed)
+        //{
+        //    m_hCurrentWeapon.OnbuttonReleased();
+        //}
+        //else if (!ShieldEnabled)
+        //{
+        //    if (Input.GetMouseButtonUp(0))
+        //    {
+        //        WeaponAntiMatter.OnbuttonReleased();
+        //    }
+
+        //    if (Input.GetMouseButtonDown(0))
+        //    {
+        //        WeaponAntiMatter.OnbuttonPressed();
+        //    }
+        //}
 	}
 
     void FixedUpdate()
@@ -118,10 +139,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (Input.GetKey(KeyCode.W))
         {
             if (Input.GetKey(KeyCode.Space))
-                rigidBody.AddForce(this.gameObject.transform.forward * MainThruster * 2, ForceMode.VelocityChange);   
+                m_hRigidBody.AddForce(this.gameObject.transform.forward * MainThruster * 2, ForceMode.VelocityChange);   
             else
             {
-                rigidBody.AddForce(this.gameObject.transform.forward * MainThruster, ForceMode.VelocityChange);
+                m_hRigidBody.AddForce(this.gameObject.transform.forward * MainThruster, ForceMode.VelocityChange);
                 Thrust();
             }
         }
@@ -132,10 +153,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (Input.GetKey(KeyCode.S))
         {
             if (Input.GetKey(KeyCode.Space))
-                rigidBody.AddForce(-this.gameObject.transform.forward * MainThruster * 2, ForceMode.VelocityChange);
+                m_hRigidBody.AddForce(-this.gameObject.transform.forward * MainThruster * 2, ForceMode.VelocityChange);
             else
             {
-                rigidBody.AddForce(-this.gameObject.transform.forward * MainThruster, ForceMode.VelocityChange);
+                m_hRigidBody.AddForce(-this.gameObject.transform.forward * MainThruster, ForceMode.VelocityChange);
             }
         }
 
@@ -152,23 +173,21 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         this.transform.forward = vRes;
 
-  
-        if(Input.GetKey(KeyCode.Alpha1))
-            currentWeapon = new WeaponAntiMatter(this.transform.Find("Cannon").gameObject, 0.05f, true, 3.0f, CONEFIRE_ANGLE);
+
+        if (Input.GetKey(KeyCode.Alpha1))
+            m_hCurrentWeapon = WeaponAntiMatter;
 
         if (Input.GetKey(KeyCode.Alpha2))
-            currentWeapon = new WeaponLaser(this.transform.Find("Cannon").gameObject, LaserStartFX, LaserLight, m_hLineRenderer, LASER_DAMAGE);
+            m_hCurrentWeapon = WeaponLaser;
 
         if (Input.GetKey(KeyCode.A))
         {
-            rigidBody.AddForce(-this.transform.right * SideThruster, ForceMode.VelocityChange);
-            //this.transform.rotation *= Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(0f, 0f, 30f), UpdateLerp() * 2f);
+            m_hRigidBody.AddForce(-this.transform.right * SideThruster, ForceMode.VelocityChange);           
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            rigidBody.AddForce(this.transform.right * SideThruster, ForceMode.VelocityChange);
-            //this.transform.rotation *= Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(0f, 0f, -30f), UpdateLerp() * 2f);
+            m_hRigidBody.AddForce(this.transform.right * SideThruster, ForceMode.VelocityChange);
         }
 
         if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))

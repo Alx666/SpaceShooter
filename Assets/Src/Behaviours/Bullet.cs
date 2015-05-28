@@ -2,27 +2,24 @@
 using System.Collections;
 using System;
 
+//TODO: implementare spostamento su layer o Physics.IgnoreCollision con chi lo ha sparato
+//TODO: risolvere bug che mostra il trail quando il pool sottostante inserisce e rimuove continuamente
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Renderer))]
 public class Bullet : MonoBehaviour, IPoolable
-{
-    public static Pool<Bullet> Pool;
-
+{    
     public float Speed;
     public float Damage;
     public float DestoryTime = 5.0f;
+    public int   PoolNumber;
 
-    private AudioSource m_hAudioShoot;
-    private Renderer    m_hRenderer;
+    private AudioSource     m_hAudioShoot;
+    private Renderer        m_hRenderer;
+    private TrailRenderer   m_hTrailRenderer;
 
     public Rigidbody    RigidBody   { get; private set; }
-    public Collider     Collider { get; private set; }
+    public Collider     Collider { get; private set; }    
         
-    static Bullet()
-    {
-        Pool = new Pool<Bullet>(Resources.Load("Bullet"));        
-    }
-
     void Start()
     {
         //this.Speed *= GameManager.Instance.CurrentDifficulty.SpeedCoeff;
@@ -34,6 +31,7 @@ public class Bullet : MonoBehaviour, IPoolable
         Collider                = this.GetComponent<Collider>();
         m_hRenderer             = this.GetComponent<Renderer>();
         m_hAudioShoot           = this.GetComponent<AudioSource>();
+        m_hTrailRenderer        = this.GetComponent<TrailRenderer>();
 
         m_hAudioShoot.pitch     = UnityEngine.Random.Range(0.9f, 1.1f);
         m_hAudioShoot.priority  = UnityEngine.Random.Range(128, 256);
@@ -46,7 +44,7 @@ public class Bullet : MonoBehaviour, IPoolable
 
         if ((screenPos.x < -0.5f || screenPos.x > 1.5f) || (screenPos.y < -0.5f || screenPos.y > 1.5f))
         {
-            Bullet.Pool.Recycle(this);
+            Pool.Recycle(this);
         }        
 	}
 
@@ -65,7 +63,7 @@ public class Bullet : MonoBehaviour, IPoolable
             }
             finally
             {
-                Bullet.Pool.Recycle(this);
+                Pool.Recycle(this);
             }
         }
         else
@@ -85,18 +83,36 @@ public class Bullet : MonoBehaviour, IPoolable
             }
         }        
     }
+    public int PoolId
+    {
+        get { return PoolNumber; }
+    }
 
+    public Pool<IPoolable> Pool { get; set; }
 
     public void Enable()
     {
         this.gameObject.SetActive(true);
+        this.StartCoroutine(this.TrailRendererReactivation());
     }
 
     public void Disable()
     {
+        m_hTrailRenderer.enabled = false;
         this.gameObject.SetActive(false);
         this.RigidBody.velocity         = Vector3.zero;
         this.RigidBody.angularVelocity  = Vector3.zero;
 
     }
+
+    private IEnumerator TrailRendererReactivation()
+    {
+        m_hTrailRenderer.enabled = true;
+        float trailTime = m_hTrailRenderer.time;
+        m_hTrailRenderer.time = 0;
+        yield return null;
+        m_hTrailRenderer.time = trailTime;
+    }
+
+
 }
