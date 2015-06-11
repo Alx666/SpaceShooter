@@ -309,7 +309,7 @@ public class GameManager : MonoBehaviour
     [Serializable]
     public class ShipSpawn
     {
-        public UnityEngine.Object ShipResource;
+        public GameObject ShipResource;
 
         public int  Max;
         public int  Min;        
@@ -350,12 +350,12 @@ public class GameManager : MonoBehaviour
 
         public class SpawnOverTime : ISpawnStrategy
         {
-            private Pool<IPoolable> m_hPool;
-            private int m_iTotalToSpawn;
-            private float m_fSpawnTime;
-            private float m_fCurrTime;
+            private Pool    m_hPool;
+            private int     m_iTotalToSpawn;
+            private float   m_fSpawnTime;
+            private float   m_fCurrTime;
 
-            public SpawnOverTime(UnityEngine.Object hResource, int iCount, int iRate)
+            public SpawnOverTime(GameObject hResource, int iCount, int iRate)
             {
                 m_hPool         = GlobalFactory.GetPool(hResource);
                 m_iTotalToSpawn = iCount;
@@ -370,10 +370,10 @@ public class GameManager : MonoBehaviour
                 {
                     if (m_fCurrTime < 0f)
                     {
-                        IPoolable hItem = m_hPool.Get();
-                        hItem.Pool = m_hPool;
-                        
-                        (hItem as MonoBehaviour).transform.position = GameManager.Instance.GetRandomSpawnPosition();
+                        GameObject hSpawn = m_hPool.Get();
+
+
+                        hSpawn.transform.position = GameManager.Instance.GetRandomSpawnPosition();
                         m_iTotalToSpawn--;
                         m_fCurrTime = m_fSpawnTime;
                     }
@@ -395,9 +395,9 @@ public class GameManager : MonoBehaviour
         {
             private int m_iTotalToSpawn;
             private int m_iMaxConcurrent;
-            private Pool<IPoolable> m_hPool;
+            private Pool m_hPool;
 
-            public SpawnToNumber(UnityEngine.Object hResource, int iCount, int iMaxConcurrent)
+            public SpawnToNumber(GameObject hResource, int iCount, int iMaxConcurrent)
             {
                 m_iTotalToSpawn     = iCount;
                 m_iMaxConcurrent    = iMaxConcurrent;
@@ -408,11 +408,10 @@ public class GameManager : MonoBehaviour
             {
                 while (m_iTotalToSpawn > 0 && m_iMaxConcurrent > m_hPool.ActiveInstances)
                 {
-                    IPoolable hItem = m_hPool.Get();
-                    hItem.Pool      = m_hPool;
+                    GameObject hItem = m_hPool.Get();                    
 
                     int iIndex = UnityEngine.Random.Range(0, GameManager.Instance.m_hSpawnPoints.Count);
-                    (hItem as MonoBehaviour).transform.position = GameManager.Instance.m_hSpawnPoints[iIndex];
+                    hItem.transform.position = GameManager.Instance.m_hSpawnPoints[iIndex];
                     m_iTotalToSpawn--;
                 }
             }

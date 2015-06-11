@@ -168,30 +168,16 @@ public class Enemy : MonoBehaviour, IDamageable, IPoolable
         yield return new WaitForSeconds(fWaitTIme);
         GameObject.Destroy(this.gameObject);
     }
-    public int PoolId
-    {
-        get { return 1; }
-    }
 
-    public Pool<IPoolable> Pool
-    {
-        get
-        {
-            throw new System.NotImplementedException();
-        }
-        set
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+    public Pool Pool { get; set; }
 
     public void Enable()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public void Disable()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

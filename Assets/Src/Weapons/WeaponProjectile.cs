@@ -4,7 +4,7 @@ using System.Collections;
 
 public class WeaponProjectile : MonoBehaviour, IWeapon
 {
-    public Object           BulletPrefab;
+    public GameObject       BulletPrefab;
 
     public GameObject       ShootLocator;
 
@@ -22,7 +22,7 @@ public class WeaponProjectile : MonoBehaviour, IWeapon
     
     public int              Barrage        = 1;
 
-    private Pool<IPoolable> m_hPool;
+    private Pool            m_hPool;
     private IWeaponState    m_hStateMachine;
     private WeaponReady     m_hTrigger;
         
@@ -149,8 +149,8 @@ public class WeaponProjectile : MonoBehaviour, IWeapon
                 vDirection = m_hOwner.ShootLocator.transform.forward;
             }
 
-            IPoolable hTmp = m_hOwner.m_hPool.Get();
-            Bullet hBullet = hTmp as Bullet;
+
+            Bullet hBullet = GlobalFactory.GetInstance<Bullet>(m_hOwner.BulletPrefab);
             hBullet.gameObject.transform.position = vPosition;
             hBullet.gameObject.transform.forward = vDirection;
             hBullet.RigidBody.AddForce(hBullet.gameObject.transform.forward * hBullet.Speed, ForceMode.VelocityChange);

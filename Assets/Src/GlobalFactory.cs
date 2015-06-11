@@ -2,23 +2,57 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GlobalFactory 
+public static class GlobalFactory 
 {
-    private static Dictionary<int, Pool<IPoolable>> m_hPools;
+    private static Dictionary<GameObject, Pool> m_hPools;
 
     static GlobalFactory()
     {
-        m_hPools = new Dictionary<int, Pool<IPoolable>>();
+        m_hPools = new Dictionary<GameObject, Pool>();
     }
 
-    internal static Pool<IPoolable> GetPool(Object hPrefab)
+    internal static Pool GetPool(GameObject hPrefab)
     {
-        GameObject hItem = hPrefab as GameObject;
-        IPoolable hPoolable = hItem.GetComponent<IPoolable>();
+        if (!m_hPools.ContainsKey(hPrefab))
+            m_hPools.Add(hPrefab, new Pool(hPrefab));
 
-        if (!m_hPools.ContainsKey(hPoolable.PoolId))
-            m_hPools.Add(hPoolable.PoolId, new Pool<IPoolable>(hPrefab));
+        return m_hPools[hPrefab];
+    }
 
-        return m_hPools[hPoolable.PoolId];
+    internal static T GetInstance<T>(GameObject hPrefab) where T : Component
+    {
+        return GetInstance<T>(hPrefab, true);
+    }
+
+    internal static T GetInstance<T>(GameObject hPrefab, bool bEnable) where T : Component
+    {
+        Pool hPool = GetPool(hPrefab);
+        GameObject hObj = hPool.Get();
+
+        T hComp = hObj.GetComponent<T>();
+
+        if (hComp == null)
+        {
+            hPool.Recycle(hObj);
+            return null;
+        }
+        else
+        {
+            return hComp;
+        }
+    }
+
+    internal static GameObject GetInstance(GameObject hPrefab)
+    {
+        return GetPool(hPrefab).Get();
+    }
+    internal static GameObject GetInstance(GameObject hPrefab, bool bEnable)
+    {
+        return GetPool(hPrefab).Get(bEnable);
+    }
+
+    internal static void Recycle(GameObject hItem)
+    {
+        hItem.GetComponent<IPoolable>().Pool.Recycle(hItem);
     }
 }

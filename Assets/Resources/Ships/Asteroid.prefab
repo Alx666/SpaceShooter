@@ -90,12 +90,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abf403d40595d554ca46ce8ef7d28183, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Explosion: {fileID: 0}
   ImpactDamage: 50
   Hp: 30
   MinForce: 5
   MaxForce: 10
-  PoolNumber: 2
+  ExplosionPrefab: {fileID: 152010, guid: 62369afe2b065ff448628004b879330d, type: 2}
 --- !u!114 &11446686
 MonoBehaviour:
   m_ObjectHideFlags: 1

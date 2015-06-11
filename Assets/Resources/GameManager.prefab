@@ -405,10 +405,15 @@ MonoBehaviour:
   Waves:
   - ShipSpawns:
     - ShipResource: {fileID: 127108, guid: bbcf38e1bb4cbbf45b50674ead7424e9, type: 2}
-      Max: 100
-      Min: 100
+      Max: 1
+      Min: 1
       OverTime: 0
-      Rate: 6
+      Rate: 10
+    - ShipResource: {fileID: 127108, guid: bbcf38e1bb4cbbf45b50674ead7424e9, type: 2}
+      Max: 1
+      Min: 1
+      OverTime: 0
+      Rate: 10
   WaveWaitTime: 3
   WaveCount: {fileID: 0}
   GameOver: {fileID: 0}

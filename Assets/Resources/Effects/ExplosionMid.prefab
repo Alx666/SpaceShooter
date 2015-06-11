@@ -59,12 +59,12 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 462880}
-  - 114: {fileID: 11479106}
   - 114: {fileID: 11465730}
   - 82: {fileID: 8206812}
   - 82: {fileID: 8222088}
+  - 114: {fileID: 11475234}
   m_Layer: 0
-  m_Name: Explosion_FX
+  m_Name: ExplosionMid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   multiplier: 1
---- !u!114 &11479106
+--- !u!114 &11475234
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -311,10 +311,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 152010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ac1691131a8c844dafe8b6ace6a172a, type: 3}
+  m_Script: {fileID: 11500000, guid: a600bf919490b6a4dac8d41cb94923a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionForce: 20
+  Delay: 3
 --- !u!198 &19854116
 ParticleSystem:
   m_ObjectHideFlags: 1

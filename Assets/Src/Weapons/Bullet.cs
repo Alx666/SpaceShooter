@@ -11,7 +11,6 @@ public class Bullet : MonoBehaviour, IPoolable
     public float Speed;
     public float Damage;
     public float DestoryTime = 5.0f;
-    public int   PoolNumber;
 
     private AudioSource     m_hAudioShoot;
     private Renderer        m_hRenderer;
@@ -44,7 +43,7 @@ public class Bullet : MonoBehaviour, IPoolable
 
         if ((screenPos.x < -0.5f || screenPos.x > 1.5f) || (screenPos.y < -0.5f || screenPos.y > 1.5f))
         {
-            Pool.Recycle(this);
+            Pool.Recycle(this.gameObject);
         }        
 	}
 
@@ -63,7 +62,7 @@ public class Bullet : MonoBehaviour, IPoolable
             }
             finally
             {
-                Pool.Recycle(this);
+                Pool.Recycle(this.gameObject);
             }
         }
         else
@@ -83,12 +82,8 @@ public class Bullet : MonoBehaviour, IPoolable
             }
         }        
     }
-    public int PoolId
-    {
-        get { return PoolNumber; }
-    }
 
-    public Pool<IPoolable> Pool { get; set; }
+    public Pool Pool { get; set; }
 
     public void Enable()
     {

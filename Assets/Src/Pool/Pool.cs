@@ -2,21 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Pool<T> where T : class, IPoolable
+public class Pool
 {
-    private Queue<T>    m_hInstances;
-    private Object      m_hPrefabResource;
+    private Queue<GameObject>       m_hInstances;
+    private GameObject              m_hPrefabResource;
 
-
-    public Pool(Object hPrefabResource)
+    public Pool(GameObject hPrefabResource)
     {
-        m_hInstances = new Queue<T>();
-        m_hPrefabResource = hPrefabResource;
+        m_hInstances        = new Queue<GameObject>();
+        m_hPrefabResource   = hPrefabResource;
     }
 
-    public T Get()
+
+    public GameObject Get()
     {
-        T hItem;
+        return Get(true);
+    }
+
+    public GameObject Get(bool bEnable)
+    {                
+        GameObject hItem;
 
         if (m_hInstances.Count > 0)
         {
@@ -24,18 +29,26 @@ public class Pool<T> where T : class, IPoolable
         }
         else
         {
-            hItem = (GameObject.Instantiate(m_hPrefabResource) as GameObject).GetComponent<T>();            
+            hItem = (GameObject.Instantiate(m_hPrefabResource) as GameObject);
         }
 
-        hItem.Pool = this as Pool<IPoolable>;
-        hItem.Enable();
+        IPoolable hPoolable = hItem.GetComponent<IPoolable>();
+        if (hPoolable == null)
+            throw new UnityException("Non IPoolable in Object Pool " + m_hPrefabResource.name);
+
+        hPoolable.Pool = this;
+
+        if(bEnable)
+            hPoolable.Enable();
+
         this.ActiveInstances++;
         return hItem;
     }
 
-    public void Recycle(T hItem)
+    public void Recycle(GameObject hItem)
     {
-        hItem.Disable();
+        IPoolable hPollable = hItem.GetComponent<IPoolable>();
+        hPollable.Disable();
         this.ActiveInstances--;
         m_hInstances.Enqueue(hItem);
     }
@@ -50,9 +63,7 @@ public class Pool<T> where T : class, IPoolable
 
 public interface IPoolable
 {
-    int PoolId { get; }
-
-    Pool<IPoolable> Pool { get; set; }
+    Pool Pool { get; set; }
 
     void Enable();
 
