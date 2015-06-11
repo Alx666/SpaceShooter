@@ -8,18 +8,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 {
     public static PlayerController Instance { get; private set; }
 
-    public float    Health   { get; private set; }
+    
     public bool     ShieldEnabled   { get; private set; }
 
-    
-    private static Object resourceExplosion;
+    public GameObject ExplosionPrefab;
 
-    public GameObject       AfterBurner;
-    public Slider           HealthSlider;
-    public ParticleSystem   LightDamageFX;
-    public ParticleSystem   HeavyDamageFX;
-    public GameObject       LaserStartFX;
-    public Light            LaserLight;
+
+    public float Hp = 100f;
 
 
     public Shield              Shield              { get; set; }
@@ -40,10 +35,14 @@ public class PlayerController : MonoBehaviour, IDamageable
     private Vector3 afterBurnerScale;
     private Vector3 afterBurnerCurrentScale;    
     private LineRenderer m_hLineRenderer;
-    private GameObject explosion;        
+    
     public float MainThruster = 5.0f;
     public float SideThruster = 5.0f;
-    public float Hp = 100f;
+
+    public GameObject AfterBurner;
+    public Slider HealthSlider;
+    public ParticleSystem LightDamageFX;
+    public ParticleSystem HeavyDamageFX;
 
     #endregion
 
@@ -63,17 +62,12 @@ public class PlayerController : MonoBehaviour, IDamageable
         m_hCurrentWeapon = WeaponAntiMatter;
 
 
-
-
-        if (resourceExplosion == null)
-            resourceExplosion = Resources.Load("Explosion_FX");
-
         afterBurnerScale = AfterBurner.transform.localScale;
         afterBurnerCurrentScale = new Vector3(afterBurnerScale.x, 0.0f, afterBurnerScale.z);
         AfterBurner.transform.localScale = afterBurnerCurrentScale;
-        Health = Health;
-        HealthSlider.maxValue = Health;
-        HealthSlider.value = Health;
+        Health = this.Hp;
+        HealthSlider.maxValue   = Health;
+        HealthSlider.value      = Health;
 
         m_hLineRenderer = this.GetComponent<LineRenderer>();
 
@@ -226,19 +220,20 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
 
     private int m_hDamageLevel;
-    
+
+    public float Health { get; private set; }
 
     public void Damage(float fDmg)
     {
         Health -= fDmg;
 
-        if (Health < Health / 2 && m_hDamageLevel == 0)
+        if (Health <= this.Hp / 2 && m_hDamageLevel == 0)
         {
             LightDamageFX.Play(true);
             m_hDamageLevel++;
         }
 
-        if (Health < Health / 3 && m_hDamageLevel == 1)
+        if (Health < this.Hp / 3 && m_hDamageLevel == 1)
         {
             HeavyDamageFX.Play(true);
             m_hDamageLevel++;
@@ -258,12 +253,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public void Destroy()
     {
-        explosion = GameObject.Instantiate(resourceExplosion) as GameObject;
-        explosion.transform.position = this.transform.position;
+        GameObject hExplosion = GlobalFactory.GetInstance(ExplosionPrefab);
+        hExplosion.transform.position = this.transform.position;
         GameObject.Destroy(this.gameObject);
-        //istanziare particella esplosione
-        //disattivare playerController
-        //triggerare gui end game
+        //TODO: Game Over
     }
 
     //public void ResetPosition()

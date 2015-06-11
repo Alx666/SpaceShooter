@@ -6,7 +6,7 @@ using System.Collections;
 [RequireComponent(typeof(WorldController))]
 public class Asteroid : MonoBehaviour, IDamageable, IPoolable
 {       
-    public float        ImpactDamage;
+    public float        ImpactDamage = 50f;
     public float        Hp;
     public float        MinForce = 5f;
     public float        MaxForce = 10f;
@@ -37,6 +37,18 @@ public class Asteroid : MonoBehaviour, IDamageable, IPoolable
 	    
 	}
 
+    void OnCollisionEnter(Collision hColl)
+    {
+        IDamageable hDamageable = hColl.gameObject.GetComponent<IDamageable>();
+
+        if (hDamageable != null)
+        {
+            hDamageable.Damage(this.ImpactDamage);
+            this.Damage(this.Health);
+        }
+    }
+
+
     #region IDamageable
 
 
@@ -50,7 +62,7 @@ public class Asteroid : MonoBehaviour, IDamageable, IPoolable
 
     public void Destroy()
     {
-        GameObject hExplosion = GlobalFactory.GetInstance(ExplosionPrefab);
+        GameObject hExplosion = GlobalFactory.GetInstance(ExplosionPrefab);        
         hExplosion.transform.position = this.transform.position;
 
         this.Pool.Recycle(this.gameObject);

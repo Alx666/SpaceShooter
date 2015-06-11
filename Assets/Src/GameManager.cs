@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
         m_hActiveEnemies.Remove(hItem);
     }
 
-    public bool WaveCompleted { get { return m_hActiveEnemies.Count == 0; } }
+    public bool WaveCompleted { get { return  m_hActiveEnemies.Count == 0; } }
 
     public bool Intro { get; set; }    
 
@@ -433,7 +433,6 @@ public class GameManager : MonoBehaviour
         public void Initialize()
         {
             ShipSpawns.ForEach(hS => hS.Initialize());
-            SpawnComplete = false;
         }
         
         public void Spawn()
@@ -449,7 +448,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        public bool SpawnComplete { get; set; }
+        public bool SpawnComplete { get { return ShipSpawns.Count == 0; } }
     }
 
     #endregion

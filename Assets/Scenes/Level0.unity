@@ -585,6 +585,22 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[0].ShipSpawns.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[2].ShipSpawns.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 443388, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -629,6 +645,98 @@ Prefab:
       propertyPath: ScoreLabel
       value: 
       objectReference: {fileID: 55725334}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.data[0].ShipResource
+      value: 
+      objectReference: {fileID: 127108, guid: bbcf38e1bb4cbbf45b50674ead7424e9, type: 2}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.data[0].Max
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.data[0].Min
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.data[0].Rate
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.data[1].ShipResource
+      value: 
+      objectReference: {fileID: 127108, guid: bbcf38e1bb4cbbf45b50674ead7424e9, type: 2}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.data[1].Max
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.data[1].Min
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.data[1].Rate
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[0].ShipSpawns.Array.data[0].OverTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[2].ShipSpawns.Array.data[0].ShipResource
+      value: 
+      objectReference: {fileID: 127108, guid: bbcf38e1bb4cbbf45b50674ead7424e9, type: 2}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[2].ShipSpawns.Array.data[0].Max
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[2].ShipSpawns.Array.data[0].Min
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[2].ShipSpawns.Array.data[0].Rate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[0].ShipSpawns.Array.data[0].Max
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[0].ShipSpawns.Array.data[0].Min
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[0].ShipSpawns.Array.data[0].Rate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[0].ShipSpawns.Array.data[1].Max
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[0].ShipSpawns.Array.data[1].Min
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[0].ShipSpawns.Array.data[1].OverTime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[0].ShipSpawns.Array.data[1].Rate
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.data[0].OverTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[1].ShipSpawns.Array.data[1].OverTime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407138, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
+      propertyPath: Waves.Array.data[2].ShipSpawns.Array.data[0].OverTime
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 17b772e71941a184fbd051aa1e15ba32, type: 2}
   m_IsPrefabParent: 0
