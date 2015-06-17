@@ -14,7 +14,6 @@ GameObject:
   - 54: {fileID: 5417908}
   - 114: {fileID: 11495354}
   - 114: {fileID: 11463312}
-  - 95: {fileID: 9551862}
   m_Layer: 0
   m_Name: Interceptor
   m_TagString: Untagged
@@ -257,23 +256,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!95 &9551862
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 119178}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0d77f0857a8e422499a1c17aad47920f, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &11463312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -293,26 +275,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 119178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd45323d27c59f2429165b3ddfeb9a70, type: 3}
+  m_Script: {fileID: 11500000, guid: b7753440558d05041817f8348d5813a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainthrusterPower: 15
-  SidethrusterPower: 15
-  Health: 100
-  FollowTime: 3
-  TargetAndFireTime: 5
-  EvadeTime: 1
-  FullThrottleTime: 2
+  MainthrusterPower: 0
+  SidethrusterPower: 0
+  Hp: 100
+  FollowTime: 0
+  TargetAndFireTime: 0
+  EvadeTime: 0
+  FullThrottleTime: 0
   DamagedDiffuse: {fileID: 0}
   DamagedColor: {fileID: 0}
   ScoreIncrement: 100
   DEBUG_STATE: 
-  m_hRigidbody: {fileID: 0}
-  m_hExplosion: {fileID: 0}
-  m_hAnimatorController: {fileID: 0}
-  m_hWorldController: {fileID: 0}
-  m_hRenderer: {fileID: 0}
-  <CurrentHealth>k__BackingField: 0
 --- !u!198 &19883098
 ParticleSystem:
   m_ObjectHideFlags: 1

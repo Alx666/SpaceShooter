@@ -117,4 +117,9 @@ public class WeaponLaser : MonoBehaviour, IWeapon
         m_fCurrentLerpTime = 0f;
     }
 
+    public bool IsFiring
+    {
+        get { return m_bFire; }
+    }
+
 }

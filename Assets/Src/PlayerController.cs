@@ -2,13 +2,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Linq;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerController : MonoBehaviour, IDamageable
+public class PlayerController : MonoBehaviour, IAIActor
 {
     public static PlayerController Instance { get; private set; }
 
-    
+    #region IAIActor
+
+    public Rigidbody Rigidbody      { get; private set; }
+    public Collider Collider        { get; private set; } 
+    public IAIActor Target          { get; set; }
+    public Transform Transform      { get { return this.transform; } }
+    public float EngineForce        { get { return MainThruster; } }
+    public float TurnForce          { get { return SideThruster; } }
+    public List<IWeapon> Weapons    { get; private set; }
+
+    #endregion
+
+    public float MainThruster = 5.0f;
+    public float SideThruster = 5.0f;
+
+
+
     public bool     ShieldEnabled   { get; private set; }
 
     public GameObject ExplosionPrefab;
@@ -24,7 +41,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     public WeaponLaser         WeaponLaser         { get; set; }
 
     private IWeapon             m_hCurrentWeapon;
-    private Rigidbody           m_hRigidBody;
+
 
 
     #region Refactoring 
@@ -36,8 +53,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private Vector3 afterBurnerCurrentScale;    
     private LineRenderer m_hLineRenderer;
     
-    public float MainThruster = 5.0f;
-    public float SideThruster = 5.0f;
+
 
     public GameObject AfterBurner;
     public Slider HealthSlider;
@@ -53,11 +69,12 @@ public class PlayerController : MonoBehaviour, IDamageable
             throw new System.Exception("Multiple PlayerController Detected!!!");
 
         Instance         = this;
-        m_hRigidBody     = this.GetComponent<Rigidbody>();
+        this.Rigidbody     = this.GetComponent<Rigidbody>();
         
         WeaponAntiMatter = this.GetComponentInChildren<WeaponProjectile>();
         WeaponLaser      = this.GetComponentInChildren<WeaponLaser>();
         Shield           = this.GetComponentInChildren<Shield>();
+        Weapons          = this.GetComponentsInChildren<IWeapon>().ToList();
 
         m_hCurrentWeapon = WeaponAntiMatter;
 
@@ -133,10 +150,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (Input.GetKey(KeyCode.W))
         {
             if (Input.GetKey(KeyCode.Space))
-                m_hRigidBody.AddForce(this.gameObject.transform.forward * MainThruster * 2, ForceMode.VelocityChange);   
+                Rigidbody.AddForce(this.gameObject.transform.forward * MainThruster * 2, ForceMode.VelocityChange);   
             else
             {
-                m_hRigidBody.AddForce(this.gameObject.transform.forward * MainThruster, ForceMode.VelocityChange);
+                Rigidbody.AddForce(this.gameObject.transform.forward * MainThruster, ForceMode.VelocityChange);
                 Thrust();
             }
         }
@@ -147,10 +164,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (Input.GetKey(KeyCode.S))
         {
             if (Input.GetKey(KeyCode.Space))
-                m_hRigidBody.AddForce(-this.gameObject.transform.forward * MainThruster * 2, ForceMode.VelocityChange);
+                Rigidbody.AddForce(-this.gameObject.transform.forward * MainThruster * 2, ForceMode.VelocityChange);
             else
             {
-                m_hRigidBody.AddForce(-this.gameObject.transform.forward * MainThruster, ForceMode.VelocityChange);
+                Rigidbody.AddForce(-this.gameObject.transform.forward * MainThruster, ForceMode.VelocityChange);
             }
         }
 
@@ -176,12 +193,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         if (Input.GetKey(KeyCode.A))
         {
-            m_hRigidBody.AddForce(-this.transform.right * SideThruster, ForceMode.VelocityChange);           
+            Rigidbody.AddForce(-this.transform.right * SideThruster, ForceMode.VelocityChange);           
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            m_hRigidBody.AddForce(this.transform.right * SideThruster, ForceMode.VelocityChange);
+            Rigidbody.AddForce(this.transform.right * SideThruster, ForceMode.VelocityChange);
         }
 
         if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
@@ -272,4 +289,28 @@ public class PlayerController : MonoBehaviour, IDamageable
     //}
 
     public bool EnableControl { get; set; }
+
+ 
+
+    public Pool Pool
+    {
+        get
+        {
+            throw new System.NotImplementedException();
+        }
+        set
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public void Enable()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Disable()
+    {
+        throw new System.NotImplementedException();
+    }
 }

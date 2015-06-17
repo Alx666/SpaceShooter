@@ -1343,15 +1343,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa768aa6c4d1e3e4a9f3734ca895cadd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ExplosionPrefab: {fileID: 152010, guid: 62369afe2b065ff448628004b879330d, type: 2}
+  Hp: 100
+  MainThruster: 1
+  SideThruster: .5
   AfterBurner: {fileID: 186064}
   HealthSlider: {fileID: 0}
   LightDamageFX: {fileID: 19895290}
   HeavyDamageFX: {fileID: 19843444}
-  LaserStartFX: {fileID: 119048}
-  LaserLight: {fileID: 10857184}
-  MainThruster: 1
-  SideThruster: .5
-  Hp: 100
 --- !u!114 &11455172
 MonoBehaviour:
   m_ObjectHideFlags: 1

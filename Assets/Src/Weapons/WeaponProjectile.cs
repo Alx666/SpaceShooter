@@ -72,15 +72,15 @@ public class WeaponProjectile : MonoBehaviour, IWeapon
         m_hTrigger.OnButtonPressed();
     }
 
+    public bool IsFiring
+    {
+        get { return m_hStateMachine != m_hTrigger; }
+    }
+
 
     public void OnUpdate()
     {
 
-    }
-
-    public bool IsPressed
-    {
-        get { return false; }
     }
 
     #region Internal State Machine
