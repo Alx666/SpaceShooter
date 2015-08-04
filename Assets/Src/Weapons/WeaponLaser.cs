@@ -27,10 +27,12 @@ public class WeaponLaser : MonoBehaviour, IWeapon
     private float m_fCurrentLerpTime;
     private bool  m_bFire;
 
+    private int m_iLayerMask;
 
     void Awake()
     {
         m_hRenderer = this.GetComponent<LineRenderer>();
+        m_iLayerMask = LayerMask.GetMask("Bullet");
     }
 
 
@@ -53,7 +55,7 @@ public class WeaponLaser : MonoBehaviour, IWeapon
         RaycastHit  vHit;
         Ray         vRay = new Ray(ShootLocator.transform.position, ShootLocator.transform.forward);
 
-        if (Physics.Raycast(vRay, out vHit))
+        if (Physics.Raycast(vRay, out vHit, m_iLayerMask))
         {
             m_hRenderer.SetPosition(0, ShootLocator.transform.position);
             m_hRenderer.SetPosition(1, vHit.point);

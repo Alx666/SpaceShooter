@@ -19,6 +19,8 @@ public class Shield : MonoBehaviour
     public float RechargeCoeff = 1.0f;
     public float ExaustedRecoverTime = 1.0f;
 
+    public bool Active { get; private set; }
+
     private bool m_bExausted;
 
     void Start()
@@ -49,6 +51,8 @@ public class Shield : MonoBehaviour
                 if (!AudioSFX.isPlaying)
                     AudioSFX.Play();
 
+                Active = true;
+
                 //if (PlayerController.Instance != null)
                 //    PlayerController.Instance.ShieldEnabled = true;
             }
@@ -69,6 +73,7 @@ public class Shield : MonoBehaviour
             ShieldLightDynamic.enabled = false;
             ShieldEnergyFX.SetTrigger("ShieldDisabled");
             AudioSFX.Stop();
+            Active = false;
 
 
 

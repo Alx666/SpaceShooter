@@ -1,63 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AIStateAim : IAIState
+public class AIStateAim : StateMachineBehaviour
 {
-    public IAIState Success { get; set; }
-    public IAIState Fail    { get; set; }
+    private IAIActor m_hActor;
 
-    private float m_fMaxAimAngle;
-
-    public AIStateAim(float fMaxAimAngle)
+    // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        m_fMaxAimAngle = fMaxAimAngle;
+        m_hActor = animator.GetComponent<IAIActor>();
     }
 
-    public void OnFixedUpdate(IAIActor hShip)
+    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (hShip.Target == null)
-            return;
+        float fAngleToEnemy;
+        float fSign = Turn(m_hActor, m_hActor.Target, out fAngleToEnemy);
 
-        float sign = Mathf.Sign(Vector3.Angle(hShip.Transform.position, hShip.Target.Transform.position));
+        animator.SetFloat("AngleToEnemy", fAngleToEnemy);
+        m_hActor.Rigidbody.AddTorque(0f, fSign * m_hActor.TurnForce, 0f, ForceMode.VelocityChange);
+    }
 
+    // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+
+    }
+
+    public static float Turn(IAIActor hShip, IAIActor hTarget, out float fAngle)
+    {
         Vector3 v1 = hShip.Transform.position;
-        Vector3 v2 = hShip.Target.Transform.position;
+        Vector3 v2 = hTarget.Transform.position;
         Vector3 v3 = v2 - v1;
 
-        float fAngle = Mathf.Sign(Vector3.Dot(v3.normalized, hShip.Transform.right));
-
-        hShip.Rigidbody.AddTorque(0f, fAngle * hShip.TurnForce, 0f, ForceMode.VelocityChange);
-    }
-
-    public IAIState Update(IAIActor hShip)
-    {
-
-        if (hShip.Target == null)
-        {
-            Fail.OnStateEnter(hShip, this);
-            return Fail;
-        }
-        else
-        {
-            Vector3 v1 = hShip.Transform.forward;
-            Vector3 v2 = (hShip.Target.Transform.position - hShip.Transform.position).normalized;
-
-            float fAngle = Vector3.Angle(v1, v2);
-
-            if (fAngle <= m_fMaxAimAngle)
-            {
-                Success.OnStateEnter(hShip, this);
-                return Success;
-            }
-            else
-            {
-                return this;
-            }
-        }
-    }
-
-    public void OnStateEnter(IAIActor hActor, IAIState hPrevState)
-    {
-        
+        fAngle = Vector3.Angle((v2 - v1).normalized, hShip.Transform.forward);
+        return Mathf.Sign(Vector3.Dot(v3.normalized, hShip.Transform.right));
     }
 }

@@ -6,9 +6,11 @@ using System;
 //TODO: risolvere bug che mostra il trail quando il pool sottostante inserisce e rimuove continuamente
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Renderer))]
-public class Bullet : MonoBehaviour, IPoolable
-{    
-    public float Speed;
+public class Bullet : MonoBehaviour, IPoolable, IBullet
+{
+
+    public GameObject ExplosionPrefab;
+
     public float Damage;
     public float DestoryTime = 5.0f;
 
@@ -47,18 +49,33 @@ public class Bullet : MonoBehaviour, IPoolable
         }        
 	}
 
+    void OnCollisionEnter(Collision hColl)
+    {
+        this.OnImpact(hColl.collider, hColl.contacts[0].point);
+    }
+
     void OnTriggerEnter(Collider hColl)
+    {
+        this.OnImpact(hColl, this.transform.position);
+    }
+
+
+    private void OnImpact(Collider hColl, Vector3 vImpactPoint)
     {
         IDamageable hToDmg = hColl.gameObject.GetComponent<IDamageable>();
         if (hToDmg != null)
         {
             try
             {
+                GameObject hExplosion = GlobalFactory.GetInstance(ExplosionPrefab);
+                hExplosion.transform.position = vImpactPoint;
+                hExplosion.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+
                 hToDmg.Damage(this.Damage);
             }
-            catch (Exception)
+            catch (Exception hEx)
             {
-                Debug.LogError("Bad Damage Implemenation");
+                Debug.LogError(hEx);
             }
             finally
             {
@@ -80,7 +97,7 @@ public class Bullet : MonoBehaviour, IPoolable
                 this.transform.forward = vCounterDirection;
                 hPhysBody.velocity = vCounterDirection * hPhysBody.velocity.magnitude;
             }
-        }        
+        }
     }
 
     public Pool Pool { get; set; }
@@ -107,5 +124,17 @@ public class Bullet : MonoBehaviour, IPoolable
         m_hTrailRenderer.time = 0;
         yield return null;
         m_hTrailRenderer.time = trailTime;
+    }
+
+    public void Shoot(Vector3 vPosition, Vector3 vDirection, float fForce, ForceMode eMode)
+    {
+        this.gameObject.transform.position = vPosition;
+        this.gameObject.transform.forward = vDirection;
+        this.RigidBody.AddForce(this.gameObject.transform.forward * fForce, eMode);
+    }
+
+    public Transform Transform
+    {
+        get { return this.transform; }
     }
 }

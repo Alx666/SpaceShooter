@@ -19,12 +19,12 @@ public static class GlobalFactory
         return m_hPools[hPrefab];
     }
 
-    internal static T GetInstance<T>(GameObject hPrefab) where T : Component
+    internal static T GetInstance<T>(GameObject hPrefab) where T : class//Component
     {
         return GetInstance<T>(hPrefab, true);
     }
 
-    internal static T GetInstance<T>(GameObject hPrefab, bool bEnable) where T : Component
+    internal static T GetInstance<T>(GameObject hPrefab, bool bEnable) where T : class// Component
     {
         Pool hPool = GetPool(hPrefab);
         GameObject hObj = hPool.Get();

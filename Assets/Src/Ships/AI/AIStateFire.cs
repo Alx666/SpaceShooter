@@ -2,46 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
-class AIStateFire : IAIState
+class AIStateFire : StateMachineBehaviour
 {
-    public IAIState Next { get; set; }
-    private bool m_bToRelease;
+    private IAIActor m_hActor;
 
-    public void OnFixedUpdate(IAIActor hShip)
+    // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        
+        m_hActor = animator.GetComponent<IAIActor>();
+        m_hActor.Transform.forward = (m_hActor.Target.Transform.position - m_hActor.Transform.position).normalized;
+        m_hActor.Rigidbody.angularVelocity = Vector3.zero;
+        m_hActor.Weapons.ForEach(hW => hW.OnbuttonPressed());        
     }
 
-    public IAIState Update(IAIActor hShip)
+    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (m_bToRelease)
-        {
-            hShip.Weapons.ForEach(hW => hW.OnbuttonReleased());
-            m_bToRelease = false;
-        }
+        float fAngleToEnemy;
+        float fSign = AIStateAim.Turn(m_hActor, m_hActor.Target, out fAngleToEnemy);
 
-        bool bWeaponsFiring = true;
-        for (int i = 0; i < hShip.Weapons.Count; i++)
-        {
-            bWeaponsFiring &= hShip.Weapons[i].IsFiring;
-        }
-
-        if (bWeaponsFiring)
-        {
-            return this;
-        }
-        else
-        {
-            Next.OnStateEnter(hShip, this);
-            return Next;
-        }
+        animator.SetFloat("AngleToEnemy", fAngleToEnemy);
     }
 
-
-    public void OnStateEnter(IAIActor hActor, IAIState hPrevState)
+    // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        hActor.Weapons.ForEach(hW => hW.OnbuttonPressed());
-        m_bToRelease = true;
+        m_hActor.Weapons.ForEach(hW => hW.OnbuttonReleased());
     }
 }

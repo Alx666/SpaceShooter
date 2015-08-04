@@ -1,0 +1,347 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &180776
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 417884}
+  - 114: {fileID: 11467914}
+  - 120: {fileID: 12004442}
+  - 114: {fileID: 11406256}
+  m_Layer: 0
+  m_Name: BulletRail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &417884
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180776}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.42353678, y: 48.5722733, z: 3.21232557}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11406256
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9777a9b84b29a7043ae73480ff53853e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ExplosionPrefab: {fileID: 0}
+  Damage: 0
+  DestoryTime: 5
+  m_hAudioShoot: {fileID: 0}
+  m_hEffect: {fileID: 0}
+--- !u!114 &11467914
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95bdfe7476280ba478ac44cdcba5b058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arcs:
+  - material: {fileID: 2100000, guid: bc9b4591c08a2ed4fbd35d64e5b2437b, type: 2}
+    colorOptions:
+      startColor:
+        key0: {}
+        key1: {}
+        key2: {}
+        key3: {}
+        key4: {}
+        key5: {}
+        key6: {}
+        key7: {}
+        m_NumColorKeys: 3
+        m_NumAlphaKeys: 4
+      onlyStartColor: 1
+      endColor:
+        key0: {}
+        key1: {}
+        key2: {}
+        key3: {}
+        key4: {}
+        key5: {}
+        key6: {}
+        key7: {}
+        m_NumColorKeys: 2
+        m_NumAlphaKeys: 4
+      coreColor:
+        key0: {}
+        key1: {}
+        key2: {}
+        key3: {}
+        key4: {}
+        key5: {}
+        key6: {}
+        key7: {}
+        m_NumColorKeys: 2
+        m_NumAlphaKeys: 2
+      coreCurve:
+        m_Curve:
+        - time: 0
+          value: 0
+          inSlope: 1.21399152
+          outSlope: 1.21399152
+          tangentMode: 10
+        - time: .4995161
+          value: .606408298
+          inSlope: .00117373466
+          outSlope: .00117373466
+          tangentMode: 10
+        - time: 1
+          value: 0
+          inSlope: -1.21164405
+          outSlope: -1.21164405
+          tangentMode: 10
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+      coreJitter: .100000001
+      fade: 1
+      fadePoint: .300000012
+    sizeOptions:
+      interpolation: 0
+      startWidthCurve:
+        m_Curve:
+        - time: 0
+          value: 0
+          inSlope: .147088245
+          outSlope: .147088245
+          tangentMode: 10
+        - time: .498527974
+          value: .073327601
+          inSlope: .000431761146
+          outSlope: .000431761146
+          tangentMode: 10
+        - time: 1
+          value: 0
+          inSlope: -.146224722
+          outSlope: -.146224722
+          tangentMode: 10
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+      onlyStartWidth: 1
+      endWidthCurve:
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+      segmentLength: 1000
+      snapSegmentsToShape: 0
+      numberOfSmoothingSegments: 0
+      minNumberOfSegments: 1
+    propagationOptions:
+      propagationType: 1
+      globalSpeed: 200
+      timeCurve:
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+    emissionOptions:
+    - emit: 0
+      shurikenPrefab: {fileID: 0}
+      emitAfterRayDeath: 0
+      particlesPerMeter: 0
+      emissionDuringLifetime:
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+      radiusCoefDuringLifetime:
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+      directionDuringLifetime:
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+      startColorByRay: 0
+      randomizationOptions:
+        sizeRndCoef: 0
+        velocityRndCoef: 0
+        angularVelocityRndCoef: 0
+        rotationRndCoef: 0
+        lifetimeRndCoef: 0
+    spatialNoise: []
+    textureOptions:
+      shapeTexture: {fileID: 0}
+      noiseTexture: {fileID: 2800000, guid: 2b144a6d192cd72469786e43f24eab88, type: 3}
+      noiseCoef:
+        m_Curve:
+        - time: 0
+          value: -.506236792
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        - time: 1
+          value: -.506236792
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+      animateTexture: 1
+      tileSize: 5
+      noiseSpeed: 5
+    lightsOptions:
+      lights: 1
+      lightsRange: 6
+      lightsIntensityMultiplyer: 10
+      renderMode: 0
+      priority: 0
+    flaresOptions:
+      startFlare:
+        enabled: 0
+        flare: {fileID: 0}
+        fadeSpeed: 50
+        maxBrightness: 0
+        maxBrightnessDistance: 0
+        minBrightness: 0
+        minBrightnessDistance: 0
+        ignoreLayers: {}
+      endFlare:
+        enabled: 1
+        flare: {fileID: 12100000, guid: e59f068002a7b47858274b3c71e10ea7, type: 2}
+        fadeSpeed: 50
+        maxBrightness: .5
+        maxBrightnessDistance: 0
+        minBrightness: .100000001
+        minBrightnessDistance: 50
+        ignoreLayers: {}
+      useNoiseMask: 0
+      noiseMaskPowerCurve:
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+    nesting:
+      Nested: 0
+      parentArcIndex: 0
+      combinedNesting: 0
+      secondaryArcIndex: 0
+      nestingCoef: 0
+    oscillations: []
+    shapeCurves: []
+  camera: {fileID: 0}
+  lifetime: 2
+  playbackType: 0
+  playbackMessages: 0
+  messageReciever: {fileID: 0}
+  elapsedTime: 0
+  freeze: 0
+  sizeMultiplier: 1
+  interpolation: 0
+  easeInOutOptions:
+    useEaseInOut: 0
+    easeInOutCurve:
+      m_Curve:
+      - time: 0
+        value: 0
+        inSlope: 2.00333214
+        outSlope: 2.00333214
+        tangentMode: 10
+      - time: .500504255
+        value: 1.00267625
+        inSlope: -.0020223856
+        outSlope: -.0020223856
+        tangentMode: 10
+      - time: 1
+        value: 0
+        inSlope: -2.00737691
+        outSlope: -2.00737691
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    distance: 2
+  shapeTransforms: []
+  shapePoints: []
+  transformsDestructionFlags: []
+  closedShape: 0
+  oscillationNormal: {x: 0, y: 1, z: 0}
+  localSpaceOcillations: 0
+  reinitThreshold: .5
+  performancePriority: 0
+  resultingShape: []
+  oldShapeTransformsSize: 0
+  overlap: 0
+  noiseOffsets: []
+  noiseScale: []
+  shapeTangents: []
+  lrends: []
+  segmNums: 
+  vertexCount: 
+  oldVertexCount: 
+  lightsCount: 
+  shapeLength: 0
+  oldShapeLength: 0
+  shapeKeyLocations: []
+  shapeKeyNormalizedLocations: []
+  maxStartWidth: []
+  maxEndWidth: []
+  coreCoefs: []
+  playBackward: 0
+  oscNormal: {x: 0, y: 0, z: 0}
+  startFlare: {fileID: 0}
+  endFlare: {fileID: 0}
+--- !u!120 &12004442
+LineRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180776}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    startWidth: 1
+    endWidth: 1
+    m_StartColor:
+      serializedVersion: 2
+      rgba: 4294967295
+    m_EndColor:
+      serializedVersion: 2
+      rgba: 4294967295
+  m_UseWorldSpace: 1
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 180776}
+  m_IsPrefabParent: 1

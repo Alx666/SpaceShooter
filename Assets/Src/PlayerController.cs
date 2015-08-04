@@ -34,11 +34,15 @@ public class PlayerController : MonoBehaviour, IAIActor
     public float Hp = 100f;
 
 
-    public Shield              Shield              { get; set; }
+    public Shield               Shield              { get; set; }
 
-    public WeaponProjectile    WeaponAntiMatter    { get; set; }
+    public WeaponProjectile     WeaponAntiMatter;
 
-    public WeaponLaser         WeaponLaser         { get; set; }
+    public WeaponLaser          WeaponLaser;
+
+    public WeaponProjectile     WeaponFlak;
+
+    public WeaponProjectile     WeaponRail;
 
     private IWeapon             m_hCurrentWeapon;
 
@@ -69,10 +73,7 @@ public class PlayerController : MonoBehaviour, IAIActor
             throw new System.Exception("Multiple PlayerController Detected!!!");
 
         Instance         = this;
-        this.Rigidbody     = this.GetComponent<Rigidbody>();
-        
-        WeaponAntiMatter = this.GetComponentInChildren<WeaponProjectile>();
-        WeaponLaser      = this.GetComponentInChildren<WeaponLaser>();
+        this.Rigidbody     = this.GetComponent<Rigidbody>();       
         Shield           = this.GetComponentInChildren<Shield>();
         Weapons          = this.GetComponentsInChildren<IWeapon>().ToList();
 
@@ -190,6 +191,12 @@ public class PlayerController : MonoBehaviour, IAIActor
 
         if (Input.GetKey(KeyCode.Alpha2))
             m_hCurrentWeapon = WeaponLaser;
+
+        if (Input.GetKey(KeyCode.Alpha3))
+            m_hCurrentWeapon = WeaponFlak;
+
+        if (Input.GetKey(KeyCode.Alpha4))
+            m_hCurrentWeapon = WeaponRail;
 
         if (Input.GetKey(KeyCode.A))
         {

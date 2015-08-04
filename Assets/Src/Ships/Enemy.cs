@@ -12,7 +12,9 @@ public class Enemy : MonoBehaviour, IAIActor
     public float        Hp                  = 100f;
     public float        SideThrustersPower  = 10f;
     public float        EnginePower         = 10f;
-
+    public float        ImpactDamage        = 0.0f;
+    public float        ChanceToSpawn       = 1.0f;
+    public List<GameObject> OnDeathSpawns;
     #region IAIActor
 
     public Rigidbody    Rigidbody   { get; private set; }
@@ -26,7 +28,7 @@ public class Enemy : MonoBehaviour, IAIActor
     #endregion
 
     private WorldController m_hWorldController;
-    private IAIState        m_hAI;
+    
 
     void Awake()
     {
@@ -38,7 +40,7 @@ public class Enemy : MonoBehaviour, IAIActor
 
         this.Health = Hp;
 
-        m_hAI = StateMachineFactory.Interceptor;
+        //m_hAI = StateMachineFactory.Interceptor;
 
         Weapons = this.GetComponentsInChildren<IWeapon>().ToList();
     }
@@ -50,12 +52,30 @@ public class Enemy : MonoBehaviour, IAIActor
 
     void Update()
     {
-        m_hAI = m_hAI.Update(this);
+        
     }
 
     void FixedUpdate()
     {
-        m_hAI.OnFixedUpdate(this);
+        
+    }
+
+
+    void OnCollisionEnter(Collision hColl)
+    {
+        if (ImpactDamage <= 0.0f)
+            return;
+
+        IDamageable hDamageable = hColl.gameObject.GetComponent<IDamageable>();
+        Shield hShield = hColl.gameObject.GetComponentInChildren<Shield>();
+
+        if (hDamageable != null)
+        {
+            if(hShield == null || !hShield.Active)
+                hDamageable.Damage(this.ImpactDamage);
+
+            this.Damage(this.ImpactDamage);
+        }
     }
 
 
@@ -70,19 +90,36 @@ public class Enemy : MonoBehaviour, IAIActor
 
     public void Destroy()
     {
-        
+
+        GameObject hExplosion = GlobalFactory.GetInstance(ExplosionPrefab);
+        hExplosion.transform.position = this.transform.position;
+
+        if (OnDeathSpawns.Count > 0f && Random.Range(0f, 1f) <= this.ChanceToSpawn)
+        {
+            GameObject hBonus = GlobalFactory.GetInstance(OnDeathSpawns[Random.Range(0, OnDeathSpawns.Count)]);
+            hBonus.transform.position = this.gameObject.transform.position;
+            Debug.Log("Spawn");
+        }
+
+        this.Pool.Recycle(this.gameObject);
     }
 
     public Pool Pool { get; set; }
 
     public void Enable()
     {
-        
+        this.Health = Hp;
+        this.gameObject.SetActive(true);
+        GameManager.Instance.RegisterForWaveEnd(this);
     }
 
     public void Disable()
     {
-        
+        Rigidbody.velocity = Vector3.zero;
+        Rigidbody.angularVelocity = Vector3.zero;
+        this.gameObject.SetActive(false);
+
+        GameManager.Instance.UnregisterForWaveEnd(this);
     }
 
 

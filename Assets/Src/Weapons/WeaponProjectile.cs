@@ -11,11 +11,10 @@ public class WeaponProjectile : MonoBehaviour, IWeapon
     [Range(0f, 90f)]
     public float            Spread         = 0f;
 
-    [Range(0.01f, 3f)]
+    [Range(0f, 3f)]
     public float            BulletDelay    = 0.3f; 
-
-    [Range(-10f, 10f)]
-    public float            ForceMult      = 1f;
+    
+    public float            Force          = 50f;
    
     [Range(0.01f, 3f)]
     public float            BarrageDelay   = 0.3f;
@@ -35,19 +34,31 @@ public class WeaponProjectile : MonoBehaviour, IWeapon
         m_hTrigger = new WeaponReady();
 
         //N Wait And Shoot for Barrage Implemenation
-        IWeaponState hLast = m_hTrigger;      
-        for (int i = 0; i < Barrage; i++)
+        IWeaponState hLast = m_hTrigger;
+
+        if (BulletDelay > 0f)
         {
-            WeaponShoot hShoot  = new WeaponShoot(this);            
-            WeaponWait  hWait   = new WeaponWait(BulletDelay);
+            for (int i = 0; i < Barrage; i++)
+            {
+                WeaponShoot hShoot = new WeaponShoot(this);
+                WeaponWait hWait = new WeaponWait(BulletDelay);
 
-            hLast.Next  = hShoot;
-            hShoot.Next = hWait;
-            hLast       = hWait;
+                hLast.Next = hShoot;
+                hShoot.Next = hWait;
+                hLast = hWait;
+            }
+
         }
-
+        else
+        {
+            WeaponShoot hShoot  = new WeaponShoot(this, Barrage);
+            WeaponWait hWait    = new WeaponWait(BulletDelay);
+            hLast.Next = hShoot;
+            hShoot.Next = hWait;
+            hLast = hWait;
+        }
+        
         (hLast as WeaponWait).Delay = BarrageDelay;
-
         hLast.Next      = m_hTrigger;
         m_hStateMachine = hLast;
     }
@@ -121,39 +132,53 @@ public class WeaponProjectile : MonoBehaviour, IWeapon
     private class WeaponShoot : IWeaponState
     {
         private WeaponProjectile m_hOwner;
+        private int m_iShootCount;
+
         public IWeaponState Next { get; set; }
 
 
-        public WeaponShoot(WeaponProjectile hWeap)
+        public WeaponShoot(WeaponProjectile hWeap) : this(hWeap, 1)
         {
             m_hOwner = hWeap;
+        }
+
+        public WeaponShoot(WeaponProjectile hWeap, int iCount)
+        {
+            m_hOwner = hWeap;
+            m_iShootCount = iCount;
         }
 
 
         public IWeaponState Update()
         {
-            Vector3 vPosition = m_hOwner.ShootLocator.transform.position;
-            vPosition.y = 0f;
+            for (int i = 0; i < m_iShootCount; i++)
+            {                            
+                Vector3 vPosition = m_hOwner.ShootLocator.transform.position;
+                vPosition.y = 0f;
 
-            Vector3 vDirection;
+                Vector3 vDirection;
 
-            if (m_hOwner.Spread > 0f)
-            {
-                float fRange = UnityEngine.Random.Range(-m_hOwner.Spread, m_hOwner.Spread);
-                vDirection = Quaternion.Euler(0f, fRange, 0f) * m_hOwner.ShootLocator.transform.forward;
-                vDirection.y = 0f;
-                vDirection.Normalize();
+                if (m_hOwner.Spread > 0f)
+                {
+                    float fRange = UnityEngine.Random.Range(-m_hOwner.Spread, m_hOwner.Spread);
+                    vDirection = Quaternion.Euler(0f, fRange, 0f) * m_hOwner.ShootLocator.transform.forward;
+                    vDirection.y = 0f;
+                    vDirection.Normalize();
+                }
+                else
+                {
+                    vDirection = m_hOwner.ShootLocator.transform.forward;
+                }
+
+
+                IBullet hBullet = GlobalFactory.GetInstance<IBullet>(m_hOwner.BulletPrefab);
+                hBullet.Shoot(vPosition, vDirection, m_hOwner.Force, ForceMode.VelocityChange);
+
+                //Bullet hBullet = GlobalFactory.GetInstance<Bullet>(m_hOwner.BulletPrefab);                
+                //hBullet.gameObject.transform.position = vPosition;
+                //hBullet.gameObject.transform.forward = vDirection;
+                //hBullet.RigidBody.AddForce(hBullet.gameObject.transform.forward * hBullet.Speed * this.m_hOwner.ForceMult, ForceMode.VelocityChange);
             }
-            else
-            {
-                vDirection = m_hOwner.ShootLocator.transform.forward;
-            }
-
-
-            Bullet hBullet = GlobalFactory.GetInstance<Bullet>(m_hOwner.BulletPrefab);
-            hBullet.gameObject.transform.position = vPosition;
-            hBullet.gameObject.transform.forward = vDirection;
-            hBullet.RigidBody.AddForce(hBullet.gameObject.transform.forward * hBullet.Speed, ForceMode.VelocityChange);
 
             return Next;
         }
